@@ -1,1165 +1,215 @@
-<!DOCTYPE html>
-<html lang="ar" dir="rtl">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>مراقب الصراع | إيران × إسرائيل × أمريكا</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;900&family=Bebas+Neue&family=Noto+Kufi+Arabic:wght@400;700;900&display=swap" rel="stylesheet">
-<style>
-:root {
-  --iran-green: #239b56;
-  --iran-red: #c0392b;
-  --israel-blue: #1a5276;
-  --israel-light: #2e86c1;
-  --usa-gold: #e8b84b;
-  --bg: #05070d;
-  --bg2: #090d18;
-  --bg3: #0d1320;
-  --border: rgba(255,255,255,0.06);
-  --text: #d8dce8;
-  --muted: #5a6478;
-  --gold: #e8b84b;
-  --danger: #e74c3c;
-}
-* { margin:0; padding:0; box-sizing:border-box; }
-body {
-  font-family: 'Cairo', sans-serif;
-  background: var(--bg);
-  color: var(--text);
-  overflow-x: hidden;
-}
-body::before {
-  content:'';
-  position:fixed;
-  inset:0;
-  background: repeating-linear-gradient(0deg,transparent,transparent 2px,rgba(0,0,0,0.025) 2px,rgba(0,0,0,0.025) 4px);
-  pointer-events:none;
-  z-index:999;
-}
-
-/* TICKER */
-.ticker-wrap {
-  background: linear-gradient(90deg,#8e1b11,#c0392b,#8e1b11);
-  overflow:hidden; height:34px;
-  display:flex; align-items:center;
-  position:sticky; top:0; z-index:200;
-  border-bottom:1px solid rgba(0,0,0,0.3);
-}
-.ticker-label {
-  background:#fff; color:#c0392b;
-  font-size:11px; font-weight:900;
-  padding:0 14px; height:100%;
-  display:flex; align-items:center;
-  white-space:nowrap; letter-spacing:1px;
-  flex-shrink:0;
-}
-.ticker-scroll { overflow:hidden; flex:1; }
-.ticker-inner {
-  display:inline-block; white-space:nowrap;
-  animation:ticker 60s linear infinite;
-  font-size:12px; font-weight:700;
-}
-.ticker-inner span { margin:0 50px; }
-@keyframes ticker { 0%{transform:translateX(100vw)} 100%{transform:translateX(-100%)} }
-
-/* HEADER */
-header {
-  background:var(--bg2);
-  border-bottom:1px solid var(--border);
-  overflow:hidden; position:relative;
-}
-header::after {
-  content:'';
-  position:absolute; inset:0;
-  background:
-    radial-gradient(ellipse 35% 100% at 2% 50%,rgba(35,155,86,0.09) 0%,transparent 70%),
-    radial-gradient(ellipse 35% 100% at 98% 50%,rgba(46,134,193,0.09) 0%,transparent 70%);
-  pointer-events:none;
-}
-.h-inner {
-  display:grid;
-  grid-template-columns:1fr auto 1fr;
-  align-items:center;
-  padding:18px 24px;
-  position:relative; z-index:1;
-}
-.h-iran { display:flex; align-items:center; gap:12px; }
-.h-il   { display:flex; align-items:center; justify-content:flex-end; gap:12px; }
-.h-flag { font-size:36px; line-height:1; }
-.h-cname {
-  font-family:'Bebas Neue',sans-serif;
-  font-size:22px; letter-spacing:2px; line-height:1;
-}
-.h-csub { font-size:10px; font-weight:700; letter-spacing:1.5px; opacity:0.6; }
-.h-allies { font-size:14px; line-height:1.8; }
-.c-iran  { color:#27ae60; }
-.c-il    { color:#2e86c1; }
-.c-usa   { color:var(--gold); }
-.vs-center { text-align:center; }
-.vs-text {
-  font-family:'Bebas Neue',sans-serif;
-  font-size:56px; color:var(--danger); line-height:1;
-  text-shadow:0 0 40px rgba(231,76,60,0.5);
-  letter-spacing:4px;
-}
-.vs-sub { font-size:9px; color:var(--muted); letter-spacing:2.5px; text-transform:uppercase; }
-.live-pill {
-  display:inline-flex; align-items:center; gap:5px;
-  background:rgba(231,76,60,0.12);
-  border:1px solid rgba(231,76,60,0.3);
-  padding:4px 12px; border-radius:20px;
-  font-size:11px; font-weight:700; color:var(--danger);
-  margin-top:8px;
-}
-.live-dot {
-  width:7px; height:7px; background:var(--danger); border-radius:50%;
-  animation:blink 1.2s ease-in-out infinite;
-}
-@keyframes blink { 0%,100%{opacity:1;box-shadow:0 0 6px var(--danger)} 50%{opacity:0.2;box-shadow:none} }
-.h-bar {
-  background:rgba(0,0,0,0.4);
-  border-top:1px solid var(--border);
-  padding:7px 24px;
-  display:flex; align-items:center; justify-content:space-between;
-  font-size:11px; color:var(--muted);
-  position:relative; z-index:1;
-}
-.h-bar strong { color:var(--gold); }
-.rbtn {
-  background:transparent;
-  border:1px solid var(--border);
-  color:var(--muted);
-  padding:3px 12px; border-radius:4px;
-  cursor:pointer; font-family:'Cairo',sans-serif;
-  font-size:11px; font-weight:700;
-  transition:all 0.2s; letter-spacing:0.5px;
-}
-.rbtn:hover { border-color:var(--gold); color:var(--gold); }
-
-/* GAUGES */
-.gauges-row {
-  max-width:1440px; margin:0 auto;
-  padding:14px 16px 0;
-  display:grid;
-  grid-template-columns:repeat(6,1fr);
-  gap:10px;
-}
-@media(max-width:900px){ .gauges-row{grid-template-columns:repeat(3,1fr)} }
-@media(max-width:500px){ .gauges-row{grid-template-columns:repeat(2,1fr)} }
-.gauge {
-  background:var(--bg2);
-  border:1px solid var(--border);
-  border-radius:8px;
-  padding:12px 10px; text-align:center;
-}
-.g-icon { font-size:18px; margin-bottom:3px; }
-.g-val { font-family:'Bebas Neue',sans-serif; font-size:26px; line-height:1; margin-bottom:1px; }
-.g-lbl { font-size:9px; color:var(--muted); font-weight:700; letter-spacing:0.5px; }
-.g-bar { background:rgba(255,255,255,0.05); height:3px; border-radius:2px; margin-top:7px; overflow:hidden; }
-.g-fill { height:100%; border-radius:2px; transition:width 1.5s cubic-bezier(.4,0,.2,1); }
-
-/* MAIN */
-main {
-  max-width:1440px; margin:0 auto;
-  padding:14px 16px;
-  display:grid;
-  grid-template-columns:300px 1fr 300px;
-  gap:14px;
-}
-@media(max-width:1100px){ main{grid-template-columns:1fr 1fr} }
-@media(max-width:680px){  main{grid-template-columns:1fr} }
-
-/* CARD */
-.card { background:var(--bg2); border:1px solid var(--border); border-radius:10px; overflow:hidden; margin-bottom:14px; }
-.card:last-child { margin-bottom:0; }
-.ch {
-  padding:10px 14px; border-bottom:1px solid var(--border);
-  display:flex; align-items:center; justify-content:space-between;
-  background:rgba(0,0,0,0.18);
-}
-.ch h3 { font-size:10px; font-weight:700; color:var(--muted); letter-spacing:1.5px; text-transform:uppercase; }
-.badge { font-size:9px; font-weight:700; padding:2px 8px; border-radius:3px; letter-spacing:1px; text-transform:uppercase; }
-.b-live { background:rgba(231,76,60,0.14); color:var(--danger); border:1px solid rgba(231,76,60,0.28); }
-.b-auto { background:rgba(232,184,75,0.11); color:var(--gold); border:1px solid rgba(232,184,75,0.24); }
-.b-ai   { background:rgba(156,89,182,0.14); color:#bb8fce; border:1px solid rgba(156,89,182,0.28); }
-.cb { padding:14px; }
-
-/* MILITARY TABLE */
-.mil-t { width:100%; border-collapse:collapse; font-size:11px; }
-.mil-t th {
-  text-align:center; padding:6px 6px;
-  color:var(--muted); font-size:9px; letter-spacing:1.2px;
-  text-transform:uppercase; border-bottom:1px solid var(--border);
-}
-.mil-t td {
-  text-align:center; padding:7px 6px;
-  border-bottom:1px solid rgba(255,255,255,0.03);
-  font-weight:600; font-size:11px;
-}
-.mil-t tr:last-child td { border-bottom:none; }
-.mil-t td:first-child { text-align:right; color:var(--muted); font-size:10px; }
-.t-ir { color:#27ae60; } .t-il { color:#2e86c1; } .t-us { color:var(--gold); }
-
-/* POWER METERS */
-.pm { display:grid; grid-template-columns:1fr 60px 1fr; align-items:center; gap:6px; margin-bottom:11px; }
-.pm:last-child { margin-bottom:0; }
-.pm-lbl { font-size:10px; color:var(--muted); margin-bottom:3px; }
-.pm-bar { background:rgba(255,255,255,0.05); height:7px; border-radius:3px; overflow:hidden; }
-.pm-fill-ir { height:100%; background:linear-gradient(90deg,#239b56,#1a7a42); border-radius:3px; transition:width 1.5s; }
-.pm-fill-il { height:100%; background:linear-gradient(90deg,#2e86c1,#1a5276); border-radius:3px; float:right; transition:width 1.5s; }
-.pm-cat { font-size:9px; color:var(--muted); text-align:center; letter-spacing:0.5px; }
-.pm-pct { font-family:'Bebas Neue',sans-serif; font-size:13px; text-align:center; }
-.pm-right { text-align:left; }
-.pm-right .pm-lbl { direction:ltr; }
-
-/* MARKET */
-.mkt-row { display:flex; align-items:center; justify-content:space-between; padding:10px 0; border-bottom:1px solid var(--border); }
-.mkt-row:last-child { border-bottom:none; }
-.mkt-l { display:flex; align-items:center; gap:9px; }
-.mkt-ico { font-size:18px; }
-.mkt-name { font-size:12px; font-weight:700; }
-.mkt-note { font-size:10px; color:var(--muted); }
-.mkt-r { text-align:left; }
-.mkt-price { font-family:'Bebas Neue',sans-serif; font-size:17px; letter-spacing:1px; color:#fff; }
-.mkt-chg { font-size:11px; font-weight:700; }
-.up { color:#2ecc71; } .dn { color:#e74c3c; }
-
-/* EVENTS */
-.ev { display:flex; gap:10px; padding:10px 0; border-bottom:1px solid var(--border); animation:fin 0.4s ease; }
-.ev:last-child { border-bottom:none; }
-@keyframes fin { from{opacity:0;transform:translateY(3px)} to{opacity:1;transform:translateY(0)} }
-.ev-dot { width:8px; height:8px; border-radius:50%; margin-top:5px; flex-shrink:0; }
-.d-r { background:#e74c3c; box-shadow:0 0 5px #e74c3c; }
-.d-g { background:#27ae60; box-shadow:0 0 5px #27ae60; }
-.d-y { background:var(--gold); box-shadow:0 0 5px var(--gold); }
-.d-b { background:#2e86c1; box-shadow:0 0 5px #2e86c1; }
-.d-p { background:#8e44ad; box-shadow:0 0 5px #8e44ad; }
-.ev-time { font-size:10px; color:var(--muted); margin-bottom:2px; }
-.ev-actor { font-size:10px; font-weight:700; letter-spacing:0.8px; margin-bottom:2px; }
-.ev-txt { font-size:12px; font-weight:600; line-height:1.5; }
-.tag-ir { color:#27ae60; } .tag-il { color:#2e86c1; } .tag-us { color:var(--gold); } .tag-un { color:#85c1e9; }
-
-/* NEWS */
-.ni { padding:10px 0; border-bottom:1px solid var(--border); }
-.ni:last-child { border-bottom:none; }
-.ni-meta { display:flex; align-items:center; gap:6px; margin-bottom:4px; flex-wrap:wrap; }
-.ni-src { font-size:9px; padding:2px 7px; border-radius:3px; font-weight:700; }
-.sr { background:rgba(241,196,15,0.1); color:#f1c40f; border:1px solid rgba(241,196,15,0.22); }
-.sb { background:rgba(231,76,60,0.1); color:#ec7063; border:1px solid rgba(236,112,99,0.22); }
-.sa { background:rgba(46,204,113,0.1); color:#2ecc71; border:1px solid rgba(46,204,113,0.22); }
-.si { background:rgba(133,193,233,0.1); color:#85c1e9; border:1px solid rgba(133,193,233,0.22); }
-.ni-datetime {
-  display:flex; flex-wrap:wrap; align-items:center; gap:8px;
-  margin-top:5px;
-}
-.ni-ago {
-  font-size:10px; color:var(--muted); font-weight:600;
-}
-.ni-fulldate {
-  font-size:10px;
-  color:var(--gold);
-  font-weight:700;
-  background: rgba(232,184,75,0.08);
-  border: 1px solid rgba(232,184,75,0.2);
-  padding: 1px 7px;
-  border-radius: 4px;
-  letter-spacing: 0.3px;
-}
-.ni-hot { font-size:9px; padding:2px 6px; border-radius:3px; font-weight:700; background:rgba(231,76,60,0.18); color:var(--danger); border:1px solid rgba(231,76,60,0.28); }
-.ni-title { font-size:12px; font-weight:600; line-height:1.55; color:var(--text); transition:color 0.2s; cursor:pointer; }
-.ni:hover .ni-title { color:#fff; }
-
-/* SCENARIOS */
-.sc { margin-bottom:12px; }
-.sc:last-child { margin-bottom:0; }
-.sc-top { display:flex; justify-content:space-between; align-items:center; margin-bottom:5px; }
-.sc-lbl { font-size:12px; font-weight:700; }
-.sc-pct { font-family:'Bebas Neue',sans-serif; font-size:15px; letter-spacing:1px; }
-.sc-bg { background:rgba(255,255,255,0.04); border-radius:3px; height:6px; overflow:hidden; }
-.sc-fill { height:100%; border-radius:3px; transition:width 1.8s cubic-bezier(.4,0,.2,1); }
-.sf1 { background:linear-gradient(90deg,#239b56,#1a7a42); }
-.sf2 { background:linear-gradient(90deg,var(--gold),#b8922b); }
-.sf3 { background:linear-gradient(90deg,#e67e22,#a04000); }
-.sf4 { background:linear-gradient(90deg,var(--danger),#922b21); }
-
-/* STRIKES TABLE */
-.strike { display:flex; gap:10px; padding:10px 0; border-bottom:1px solid var(--border); }
-.strike:last-child { border-bottom:none; }
-.strike-dot { width:8px; height:8px; border-radius:50%; margin-top:5px; flex-shrink:0; }
-.st-date { font-size:10px; color:var(--muted); margin-bottom:2px; }
-.st-who { font-size:10px; font-weight:700; margin-bottom:2px; }
-.st-desc { font-size:12px; font-weight:600; line-height:1.5; }
-
-/* FORCES SPLIT */
-.forces-split {
-  display:grid; grid-template-columns:1fr 40px 1fr;
-  margin-bottom:14px;
-}
-.fs-iran { background:linear-gradient(135deg,rgba(35,155,86,0.07),rgba(5,7,13,0.85)); border:1px solid rgba(35,155,86,0.18); border-radius:10px 0 0 10px; padding:14px 12px; }
-.fs-vs   { background:var(--bg3); display:flex; align-items:center; justify-content:center; border-top:1px solid var(--border); border-bottom:1px solid var(--border); }
-.fs-il   { background:linear-gradient(135deg,rgba(46,134,193,0.07),rgba(5,7,13,0.85)); border:1px solid rgba(46,134,193,0.18); border-radius:0 10px 10px 0; padding:14px 12px; text-align:left; }
-.fs-title { font-size:9px; letter-spacing:1.5px; text-transform:uppercase; font-weight:700; margin-bottom:8px; opacity:0.6; }
-.fs-flag { font-size:22px; margin-bottom:6px; }
-.fs-big { font-family:'Bebas Neue',sans-serif; font-size:22px; line-height:1.1; margin-bottom:1px; }
-.fs-sm { font-size:10px; color:var(--muted); }
-.fs-vs-txt { font-family:'Bebas Neue',sans-serif; font-size:18px; color:var(--danger); opacity:0.5; writing-mode:vertical-rl; letter-spacing:2px; }
-
-/* ── MEDIA SECTION ── */
-.media-tabs {
-  display:flex; gap:0;
-  border-bottom:1px solid var(--border);
-  background:rgba(0,0,0,0.18);
-}
-.mtab {
-  padding:9px 14px; font-size:11px; font-weight:700;
-  color:var(--muted); cursor:pointer; letter-spacing:0.5px;
-  border-bottom:2px solid transparent; transition:all 0.2s;
-  white-space:nowrap;
-}
-.mtab:hover { color:var(--text); }
-.mtab.active { color:var(--danger); border-bottom-color:var(--danger); }
-
-/* PHOTO GRID */
-.photo-grid { display:grid; grid-template-columns:1fr 1fr; gap:8px; }
-.photo-item { position:relative; border-radius:6px; overflow:hidden; cursor:pointer; }
-.photo-item img {
-  width:100%; aspect-ratio:16/9; object-fit:cover;
-  display:block; background:var(--bg3);
-  transition:transform 0.3s;
-}
-.photo-item:hover img { transform:scale(1.04); }
-.photo-caption {
-  position:absolute; bottom:0; left:0; right:0;
-  background:linear-gradient(transparent,rgba(0,0,0,0.85));
-  padding:18px 8px 6px;
-  font-size:10px; font-weight:600; line-height:1.4;
-  color:#fff;
-}
-.photo-src {
-  font-size:9px; color:rgba(255,255,255,0.55);
-  margin-top:2px; font-weight:400;
-}
-.photo-badge {
-  position:absolute; top:6px; right:6px;
-  background:rgba(231,76,60,0.85); color:#fff;
-  font-size:9px; font-weight:700; padding:2px 7px;
-  border-radius:3px; letter-spacing:0.5px;
-}
-.photo-full { grid-column:span 2; }
-.photo-full img { aspect-ratio:21/9; }
-
-/* LOADING PHOTO */
-.photo-skeleton {
-  background:linear-gradient(90deg, var(--bg3) 25%, rgba(255,255,255,0.04) 50%, var(--bg3) 75%);
-  background-size:200% 100%;
-  animation:shimmer 1.5s infinite;
-  border-radius:6px; aspect-ratio:16/9;
-}
-@keyframes shimmer { 0%{background-position:200% 0} 100%{background-position:-200% 0} }
-
-/* YOUTUBE LIVE */
-.yt-embed-wrap {
-  position:relative; padding-bottom:56.25%; height:0;
-  border-radius:8px; overflow:hidden; background:var(--bg3);
-}
-.yt-embed-wrap iframe { position:absolute; inset:0; width:100%; height:100%; border:none; }
-.yt-channels { display:grid; grid-template-columns:1fr 1fr; gap:8px; margin-top:10px; }
-.yt-ch {
-  display:flex; align-items:center; gap:8px;
-  background:rgba(255,0,0,0.06); border:1px solid rgba(255,0,0,0.15);
-  border-radius:7px; padding:8px 10px; cursor:pointer;
-  transition:all 0.2s;
-}
-.yt-ch:hover { background:rgba(255,0,0,0.12); border-color:rgba(255,0,0,0.3); }
-.yt-ch.active { background:rgba(255,0,0,0.18); border-color:#e74c3c; }
-.yt-thumb { width:36px; height:36px; border-radius:50%; object-fit:cover; background:var(--bg3); }
-.yt-name { font-size:11px; font-weight:700; }
-.yt-lang { font-size:9px; color:var(--muted); }
-.yt-live-dot { width:6px; height:6px; background:#e74c3c; border-radius:50%; animation:blink 1.2s infinite; margin-right:2px; }
-
-/* INFOGRAPHIC */
-.infograph { padding:0; }
-.ig-row {
-  display:grid; grid-template-columns:auto 1fr auto;
-  align-items:center; gap:10px;
-  padding:10px 14px; border-bottom:1px solid var(--border);
-}
-.ig-row:last-child { border-bottom:none; }
-.ig-icon { font-size:22px; }
-.ig-label { font-size:12px; font-weight:700; }
-.ig-sub { font-size:10px; color:var(--muted); margin-top:1px; }
-.ig-bar-wrap { grid-column:1/-1; padding:0 14px 10px; margin-top:-6px; }
-.ig-compare { display:grid; grid-template-columns:1fr 1fr; gap:4px; }
-.ig-iran-bar, .ig-il-bar { height:5px; border-radius:3px; transition:width 1.5s; }
-.ig-iran-bar { background:linear-gradient(90deg,#239b56,#1a7a42); }
-.ig-il-bar { background:linear-gradient(90deg,#2e86c1,#1a5276); float:right; }
-.ig-labels { display:flex; justify-content:space-between; font-size:9px; color:var(--muted); margin-top:3px; }
-
-/* LIGHTBOX */
-.lightbox {
-  display:none; position:fixed; inset:0; z-index:500;
-  background:rgba(0,0,0,0.92); align-items:center; justify-content:center;
-}
-.lightbox.open { display:flex; }
-.lightbox img { max-width:90vw; max-height:85vh; object-fit:contain; border-radius:8px; }
-.lightbox-close {
-  position:absolute; top:20px; right:24px;
-  font-size:28px; color:#fff; cursor:pointer; opacity:0.7;
-}
-.lightbox-close:hover { opacity:1; }
-.lightbox-cap { position:absolute; bottom:24px; left:50%; transform:translateX(-50%); color:#fff; font-size:13px; text-align:center; }
-
-/* FOOTER */
-footer { text-align:center; padding:18px; font-size:11px; color:var(--muted); border-top:1px solid var(--border); margin-top:4px; letter-spacing:0.5px; }
-footer strong { color:var(--gold); }
-
-/* UTILS */
-.ld { display:inline-flex; gap:4px; align-items:center; }
-.ld span { width:5px; height:5px; background:var(--muted); border-radius:50%; animation:ld 1.2s infinite; }
-.ld span:nth-child(2){animation-delay:.2s} .ld span:nth-child(3){animation-delay:.4s}
-@keyframes ld{0%,80%,100%{opacity:.2}40%{opacity:1}}
-.flash { animation:numf 0.5s ease; }
-@keyframes numf { 0%{color:var(--gold)} 100%{} }
-</style>
-</head>
-<body>
-
-<!-- TICKER -->
-<div class="ticker-wrap">
-  <div class="ticker-label">⚡ عاجل</div>
-  <div class="ticker-scroll">
-    <div class="ticker-inner" id="ticker">
-      <span>🔴 جاري تحميل آخر أخبار الصراع...</span>
-    </div>
-  </div>
-</div>
-
-<!-- HEADER -->
-<header>
-  <div class="h-inner">
-    <div class="h-iran">
-      <div>
-        <div class="h-flag">🇮🇷</div>
-        <div class="h-cname c-iran">إيران</div>
-        <div class="h-csub" style="color:#27ae60">الجمهورية الإسلامية</div>
-      </div>
-      <div>
-        <div style="font-size:9px;color:var(--muted);letter-spacing:1px;margin-bottom:5px">محور المقاومة</div>
-        <div class="h-allies">🇷🇺 روسيا</div>
-        <div class="h-allies">🇨🇳 الصين</div>
-        <div class="h-allies">🇾🇪 الحوثيون</div>
-        <div class="h-allies">🇱🇧 حزب الله</div>
-      </div>
-    </div>
-
-    <div class="vs-center">
-      <div class="vs-text">VS</div>
-      <div class="vs-sub">الصراع الكبير • الشرق الأوسط</div>
-      <div class="live-pill"><div class="live-dot"></div>بث مباشر</div>
-    </div>
-
-    <div class="h-il">
-      <div style="text-align:right">
-        <div style="font-size:9px;color:var(--muted);letter-spacing:1px;margin-bottom:5px;text-align:left">التحالف الغربي</div>
-        <div class="h-allies" style="text-align:left">🇬🇧 بريطانيا</div>
-        <div class="h-allies" style="text-align:left">🇫🇷 فرنسا</div>
-        <div class="h-allies" style="text-align:left">🇩🇪 ألمانيا</div>
-        <div class="h-allies" style="text-align:left">🇯🇴 الأردن</div>
-      </div>
-      <div style="text-align:left">
-        <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;justify-content:flex-end">
-          <div>
-            <div class="h-cname c-il">إسرائيل</div>
-            <div class="h-csub" style="color:#2e86c1">دولة إسرائيل</div>
-          </div>
-          <div class="h-flag">🇮🇱</div>
-        </div>
-        <div style="display:flex;align-items:center;gap:8px;justify-content:flex-end">
-          <div>
-            <div class="h-cname c-usa">أمريكا</div>
-            <div class="h-csub" style="color:var(--gold)">القوة العظمى</div>
-          </div>
-          <div class="h-flag">🇺🇸</div>
-        </div>
-      </div>
-    </div>
-  </div>
-  <div class="h-bar">
-    <span>آخر تحديث: <strong id="upd">--:--:--</strong> &nbsp;·&nbsp; تحديث تلقائي كل 30 ثانية</span>
-    <button class="rbtn" onclick="masterRefresh()">⟳ تحديث الآن</button>
-  </div>
-</header>
-
-<!-- RISK GAUGES -->
-<div class="gauges-row">
-  <div class="gauge">
-    <div class="g-icon">☢️</div>
-    <div class="g-val" id="gv0" style="color:#e74c3c">12%</div>
-    <div class="g-lbl">خطر نووي</div>
-    <div class="g-bar"><div class="g-fill" id="gf0" style="width:12%;background:linear-gradient(90deg,#e67e22,#e74c3c)"></div></div>
-  </div>
-  <div class="gauge">
-    <div class="g-icon">🚀</div>
-    <div class="g-val" id="gv1" style="color:var(--gold)">78%</div>
-    <div class="g-lbl">تبادل صاروخي</div>
-    <div class="g-bar"><div class="g-fill" id="gf1" style="width:78%;background:linear-gradient(90deg,var(--gold),#b8922b)"></div></div>
-  </div>
-  <div class="gauge">
-    <div class="g-icon">🔥</div>
-    <div class="g-val" id="gv2" style="color:#e74c3c">65%</div>
-    <div class="g-lbl">خطر التصعيد</div>
-    <div class="g-bar"><div class="g-fill" id="gf2" style="width:65%;background:linear-gradient(90deg,#e74c3c,#922b21)"></div></div>
-  </div>
-  <div class="gauge">
-    <div class="g-icon">🛢️</div>
-    <div class="g-val" id="gv3" style="color:var(--gold)">55%</div>
-    <div class="g-lbl">اضطراب الطاقة</div>
-    <div class="g-bar"><div class="g-fill" id="gf3" style="width:55%;background:linear-gradient(90deg,#27ae60,var(--gold))"></div></div>
-  </div>
-  <div class="gauge">
-    <div class="g-icon">🌊</div>
-    <div class="g-val" id="gv4" style="color:#85c1e9">42%</div>
-    <div class="g-lbl">مضيق هرمز</div>
-    <div class="g-bar"><div class="g-fill" id="gf4" style="width:42%;background:linear-gradient(90deg,#2e86c1,#1a5276)"></div></div>
-  </div>
-  <div class="gauge">
-    <div class="g-icon">💰</div>
-    <div class="g-val" id="gv5" style="color:#2ecc71">48%</div>
-    <div class="g-lbl">صدمة اقتصادية</div>
-    <div class="g-bar"><div class="g-fill" id="gf5" style="width:48%;background:linear-gradient(90deg,#239b56,#27ae60)"></div></div>
-  </div>
-</div>
-
-<!-- MAIN GRID -->
-<main>
-
-<!-- ──── RIGHT COL ──── -->
-<div>
-
-  <!-- MILITARY TABLE -->
-  <div class="card">
-    <div class="ch"><h3>⚔️ موازين القوى العسكرية</h3><span class="badge b-auto">2025</span></div>
-    <div class="cb">
-      <table class="mil-t">
-        <thead>
-          <tr>
-            <th style="text-align:right">العنصر</th>
-            <th style="color:rgba(35,155,86,0.8)">🇮🇷 إيران</th>
-            <th style="color:rgba(46,134,193,0.8)">🇮🇱 إسرائيل</th>
-            <th style="color:rgba(232,184,75,0.8)">🇺🇸 أمريكا</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr><td>الجيش النظامي</td><td class="t-ir">610K</td><td class="t-il">169K</td><td class="t-us">1.3M</td></tr>
-          <tr><td>الدبابات</td><td class="t-ir">1,996</td><td class="t-il">1,370</td><td class="t-us">5,500</td></tr>
-          <tr><td>الطائرات الحربية</td><td class="t-ir">551</td><td class="t-il">612</td><td class="t-us">13,247</td></tr>
-          <tr><td>الصواريخ الباليستية</td><td class="t-ir">3,000+</td><td class="t-il">سري</td><td class="t-us">—</td></tr>
-          <tr><td>السفن الحربية</td><td class="t-ir">101</td><td class="t-il">67</td><td class="t-us">484</td></tr>
-          <tr><td>الرؤوس النووية</td><td class="t-ir" style="color:var(--danger)">⚠️ قريب</td><td class="t-il">~90</td><td class="t-us">5,550</td></tr>
-          <tr><td>ميزانية الدفاع</td><td class="t-ir">$10B</td><td class="t-il">$24B</td><td class="t-us">$886B</td></tr>
-        </tbody>
-      </table>
-    </div>
-  </div>
-
-  <!-- POWER BARS -->
-  <div class="card">
-    <div class="ch"><h3>📊 مقارنة إيران × إسرائيل</h3><span class="badge b-ai">تحليل AI</span></div>
-    <div class="cb" id="pm-container"></div>
-  </div>
-
-  <!-- MARKET -->
-  <div class="card">
-    <div class="ch"><h3>📈 تأثير الصراع على الأسواق</h3><span class="badge b-live">● مباشر</span></div>
-    <div class="cb">
-      <div class="mkt-row">
-        <div class="mkt-l"><span class="mkt-ico">🛢️</span><div><div class="mkt-name">النفط (برنت)</div><div class="mkt-note">حساس لمضيق هرمز</div></div></div>
-        <div class="mkt-r"><div class="mkt-price" id="mp0">—</div><div class="mkt-chg" id="mc0">—</div></div>
-      </div>
-      <div class="mkt-row">
-        <div class="mkt-l"><span class="mkt-ico">🥇</span><div><div class="mkt-name">الذهب</div><div class="mkt-note">ملاذ آمن حربي</div></div></div>
-        <div class="mkt-r"><div class="mkt-price" id="mp1">—</div><div class="mkt-chg" id="mc1">—</div></div>
-      </div>
-      <div class="mkt-row">
-        <div class="mkt-l"><span class="mkt-ico">₿</span><div><div class="mkt-name">البيتكوين</div><div class="mkt-note">مؤشر ثقة السوق</div></div></div>
-        <div class="mkt-r"><div class="mkt-price" id="mp2">—</div><div class="mkt-chg" id="mc2">—</div></div>
-      </div>
-      <div class="mkt-row">
-        <div class="mkt-l"><span class="mkt-ico">📊</span><div><div class="mkt-name">S&P 500</div><div class="mkt-note">تأثير غير مباشر</div></div></div>
-        <div class="mkt-r"><div class="mkt-price" id="mp3">—</div><div class="mkt-chg" id="mc3">—</div></div>
-      </div>
-    </div>
-  </div>
-
-</div>
-
-<!-- ──── CENTER COL ──── -->
-<div>
-
-  <!-- FORCES SPLIT -->
-  <div class="forces-split">
-    <div class="fs-iran">
-      <div class="fs-title c-iran">محور إيران</div>
-      <div class="fs-flag">🇮🇷 🇾🇪 🇱🇧 🇮🇶</div>
-      <div class="fs-big c-iran">610K+</div><div class="fs-sm">نظاميون</div>
-      <div style="margin-top:6px"><div class="fs-big" style="color:var(--danger);font-size:18px">200K+</div><div class="fs-sm">الوكلاء (حزب الله، الحوثيون، الفصائل)</div></div>
-      <div style="margin-top:8px;font-size:10px;color:var(--muted)">🚀 3,000+ صاروخ باليستي</div>
-    </div>
-    <div class="fs-vs"><div class="fs-vs-txt">VS</div></div>
-    <div class="fs-il">
-      <div class="fs-title c-il" style="direction:ltr">إسرائيل + أمريكا</div>
-      <div class="fs-flag">🇮🇱 🇺🇸 🇬🇧</div>
-      <div class="fs-big c-il">169K</div><div class="fs-sm">IDF إسرائيل</div>
-      <div style="margin-top:6px"><div class="fs-big" style="color:var(--gold);font-size:18px">45K+</div><div class="fs-sm">قوات أمريكية بالمنطقة</div></div>
-      <div style="margin-top:8px;font-size:10px;color:var(--muted)">✈️ 3 حاملات طائرات أمريكية</div>
-    </div>
-  </div>
-
-  <!-- MEDIA CARD -->
-  <div class="card" style="margin-bottom:14px">
-    <div class="ch" style="padding:0;border-bottom:none">
-      <div class="media-tabs" style="width:100%">
-        <div class="mtab active" onclick="switchTab('photos')">📸 صور الأحداث</div>
-        <div class="mtab" onclick="switchTab('video')">📺 بث مباشر</div>
-        <div class="mtab" onclick="switchTab('infograph')">📊 إنفوغراف</div>
-      </div>
-    </div>
-
-    <!-- TAB: PHOTOS -->
-    <div id="tab-photos" class="cb">
-      <div class="photo-grid" id="photo-grid">
-        <div class="photo-skeleton"></div>
-        <div class="photo-skeleton"></div>
-        <div class="photo-skeleton photo-full" style="aspect-ratio:21/9"></div>
-        <div class="photo-skeleton"></div>
-        <div class="photo-skeleton"></div>
-      </div>
-      <div style="font-size:10px;color:var(--muted);margin-top:10px;text-align:center">📷 الصور من Wikimedia Commons — مرخصة للاستخدام العام</div>
-    </div>
-
-    <!-- TAB: VIDEO -->
-    <div id="tab-video" class="cb" style="display:none">
-      <div class="yt-embed-wrap">
-        <iframe id="yt-frame"
-          src="https://www.youtube.com/embed/live_stream?channel=UCNye-wNBqNL5ZzHSJj3l8Bg&autoplay=1&mute=1"
-          allow="autoplay; encrypted-media" allowfullscreen></iframe>
-      </div>
-      <div class="yt-channels">
-        <div class="yt-ch active" onclick="loadChannel('UCNye-wNBqNL5ZzHSJj3l8Bg',this)">
-          <div class="yt-live-dot"></div><div><div class="yt-name">الجزيرة عربي</div><div class="yt-lang">🇶🇦 عربي • مباشر</div></div>
-        </div>
-        <div class="yt-ch" onclick="loadChannel('UCVMZcF6aB5v4bBStFoxnLtw',this)">
-          <div class="yt-live-dot"></div><div><div class="yt-name">BBC Arabic</div><div class="yt-lang">🌍 عربي • مباشر</div></div>
-        </div>
-        <div class="yt-ch" onclick="loadChannel('UCupvZG-5ko_eiXAupbDfxWw',this)">
-          <div class="yt-live-dot"></div><div><div class="yt-name">CNN Arabic</div><div class="yt-lang">🌐 عربي • مباشر</div></div>
-        </div>
-        <div class="yt-ch" onclick="loadChannel('UCeY0bbntWzzVIaj2z3QigXg',this)">
-          <div class="yt-live-dot"></div><div><div class="yt-name">France 24</div><div class="yt-lang">🇫🇷 عربي • مباشر</div></div>
-        </div>
-      </div>
-      <div style="font-size:10px;color:var(--muted);margin-top:8px;text-align:center">📺 اضغط على القناة للتبديل — قد يحتاج لفتح YouTube مباشرة</div>
-    </div>
-
-    <!-- TAB: INFOGRAPH -->
-    <div id="tab-infograph" style="display:none">
-      <div id="infograph-content" class="infograph"></div>
-    </div>
-  </div>
-
-  <!-- LIGHTBOX -->
-  <div class="lightbox" id="lightbox" onclick="closeLightbox()">
-    <div class="lightbox-close">✕</div>
-    <img id="lb-img" src="" alt="">
-    <div class="lightbox-cap" id="lb-cap"></div>
-  </div>
-
-  <!-- NEWS -->
-  <div class="card" style="margin-bottom:14px">
-    <div class="ch"><h3>📰 آخر أخبار الصراع</h3><span class="badge b-live">● مباشر</span></div>
-    <div class="cb" id="news-feed">
-      <div style="text-align:center;padding:18px;color:var(--muted)">
-        <div class="ld"><span></span><span></span><span></span></div>
-        <div style="margin-top:8px;font-size:11px">جاري تحميل الأخبار...</div>
-      </div>
-    </div>
-  </div>
-
-  <!-- EVENTS -->
-  <div class="card">
-    <div class="ch"><h3>🕐 سجل الأحداث الأخيرة</h3><span class="badge b-live">● مباشر</span></div>
-    <div class="cb" id="events-feed"></div>
-  </div>
-
-</div>
-
-<!-- ──── LEFT COL ──── -->
-<div>
-
-  <!-- AI SCENARIOS -->
-  <div class="card">
-    <div class="ch"><h3>🤖 سيناريوهات الـ 30 يوم القادمة</h3><span class="badge b-ai">AI محدّث</span></div>
-    <div class="cb">
-      <div style="font-size:10px;color:var(--muted);margin-bottom:12px">آخر تحليل: <span id="ai-t" style="color:var(--gold)">--:--</span></div>
-      <div class="sc"><div class="sc-top"><span class="sc-lbl">🟢 تهدئة دبلوماسية</span><span class="sc-pct up" id="s1p">18%</span></div><div class="sc-bg"><div class="sc-fill sf1" id="s1b" style="width:18%"></div></div></div>
-      <div class="sc"><div class="sc-top"><span class="sc-lbl">🟡 استمرار الوضع الراهن</span><span class="sc-pct" id="s2p" style="color:var(--gold)">45%</span></div><div class="sc-bg"><div class="sc-fill sf2" id="s2b" style="width:45%"></div></div></div>
-      <div class="sc"><div class="sc-top"><span class="sc-lbl">🟠 ضربات محدودة متبادلة</span><span class="sc-pct" id="s3p" style="color:#e67e22">28%</span></div><div class="sc-bg"><div class="sc-fill sf3" id="s3b" style="width:28%"></div></div></div>
-      <div class="sc"><div class="sc-top"><span class="sc-lbl">🔴 حرب إقليمية شاملة</span><span class="sc-pct dn" id="s4p">9%</span></div><div class="sc-bg"><div class="sc-fill sf4" id="s4b" style="width:9%"></div></div></div>
-      <div style="margin-top:13px;padding:11px;background:rgba(156,89,182,0.06);border:1px solid rgba(156,89,182,0.18);border-radius:7px;font-size:11px;line-height:1.7">
-        <strong style="color:#bb8fce">تقييم AI:</strong><br>
-        إيران تعتمد استراتيجية الضغط عبر الوكلاء دون المواجهة المباشرة مع الولايات المتحدة. البرنامج النووي هو ورقة الضغط الأقوى. الوضع يميل نحو الاستمرار مع ومضات تصعيد محدودة.
-      </div>
-    </div>
-  </div>
-
-  <!-- FLASHPOINTS -->
-  <div class="card">
-    <div class="ch"><h3>📍 نقاط الاشتعال الرئيسية</h3><span class="badge b-auto">محدّث</span></div>
-    <div class="cb">
-      <div class="ev"><div class="ev-dot d-r"></div><div><div class="ev-time">مستمر</div><div class="ev-actor tag-ir">☢️ البرنامج النووي</div><div class="ev-txt">تخصيب 60% — على بُعد خطوة من القنبلة</div></div></div>
-      <div class="ev"><div class="ev-dot d-y"></div><div><div class="ev-time">مستمر</div><div class="ev-actor tag-ir">🌊 مضيق هرمز</div><div class="ev-txt">إيران تتحكم بـ20% من إمدادات النفط العالمي</div></div></div>
-      <div class="ev"><div class="ev-dot d-r"></div><div><div class="ev-time">مستمر</div><div class="ev-actor tag-ir">🇱🇧 حزب الله</div><div class="ev-txt">150,000+ صاروخ موجه نحو إسرائيل</div></div></div>
-      <div class="ev"><div class="ev-dot d-y"></div><div><div class="ev-time">مستمر</div><div class="ev-actor tag-ir">🇾🇪 الحوثيون</div><div class="ev-txt">هجمات متكررة على الملاحة في البحر الأحمر</div></div></div>
-      <div class="ev"><div class="ev-dot d-b"></div><div><div class="ev-time">مستمر</div><div class="ev-actor tag-us">🇺🇸 القوة الأمريكية</div><div class="ev-txt">3 حاملات طائرات + قواعد متعددة بالمنطقة</div></div></div>
-      <div class="ev"><div class="ev-dot d-p"></div><div><div class="ev-time">متقطع</div><div class="ev-actor" style="color:#bb8fce">🇮🇶 الفصائل العراقية</div><div class="ev-txt">هجمات على القواعد الأمريكية في العراق وسوريا</div></div></div>
-    </div>
-  </div>
-
-  <!-- STRIKES LOG -->
-  <div class="card">
-    <div class="ch"><h3>💥 سجل الضربات المتبادلة</h3><span class="badge b-auto">موثّق</span></div>
-    <div class="cb">
-      <div class="strike"><div class="strike-dot d-r"></div><div><div class="st-date">أبريل 2024</div><div class="st-who tag-ir">🇮🇷 إيران ← إسرائيل</div><div class="st-desc">أول هجوم مباشر: 300+ صاروخ ومسيّرة</div></div></div>
-      <div class="strike"><div class="strike-dot d-b"></div><div><div class="st-date">أكتوبر 2024</div><div class="st-who tag-ir">🇮🇷 إيران ← إسرائيل</div><div class="st-desc">الموجة الثانية: 200 صاروخ باليستي في ساعة</div></div></div>
-      <div class="strike"><div class="strike-dot d-y"></div><div><div class="st-date">أكتوبر 2024</div><div class="st-who tag-il">🇮🇱 إسرائيل ← إيران</div><div class="st-desc">ضربات انتقامية استهدفت منشآت عسكرية داخل إيران</div></div></div>
-      <div class="strike"><div class="strike-dot d-r"></div><div><div class="st-date">2023 - مستمر</div><div class="st-who" style="color:#e67e22">🇾🇪 الحوثيون ← إسرائيل</div><div class="st-desc">مئات الهجمات الصاروخية والمسيّرات</div></div></div>
-      <div class="strike"><div class="strike-dot d-b"></div><div><div class="st-date">2024</div><div class="st-who tag-us">🇺🇸 أمريكا ← الحوثيون</div><div class="st-desc">عملية Prosperity Guardian: ضربات على اليمن</div></div></div>
-    </div>
-  </div>
-
-</div>
-</main>
-
-<footer>تطوير: <strong>Ahmed Hussein</strong> | 2025 | تحديث تلقائي مفعّل | جميع البيانات لأغراض إعلامية وتحليلية</footer>
-
-<script>
-// ── TIMESTAMP
-function stamp(){
-  const n=new Date(), p=x=>String(x).padStart(2,'0');
-  const s=`${p(n.getHours())}:${p(n.getMinutes())}:${p(n.getSeconds())}`;
-  document.getElementById('upd').textContent=s;
-  document.getElementById('ai-t').textContent=s.slice(0,5);
-}
-
-// ── MARKETS
-const MV={ oil:{p:74.35,c:-0.82}, gold:{p:2920.5,c:1.23}, sp:{p:5614.1,c:0.41} };
-function tickMkts(){
-  MV.oil.p +=(Math.random()-.5)*.5;  MV.oil.c +=(Math.random()-.5)*.08;
-  MV.gold.p+=(Math.random()-.5)*4;   MV.gold.c+=(Math.random()-.5)*.1;
-  MV.sp.p  +=(Math.random()-.5)*10;  MV.sp.c  +=(Math.random()-.5)*.04;
-  setMkt(0,'$'+MV.oil.p.toFixed(2), MV.oil.c);
-  setMkt(1,'$'+MV.gold.p.toFixed(2), MV.gold.c);
-  setMkt(3, MV.sp.p.toFixed(2), MV.sp.c);
-}
-async function fetchBTC(){
-  try{
-    const r=await fetch('https://api.coingecko.com/api/v3/simple/price?ids=bitcoin&vs_currencies=usd&include_24hr_change=true');
-    if(!r.ok) throw 0;
-    const d=await r.json();
-    setMkt(2,'$'+d.bitcoin.usd.toLocaleString('en-US',{maximumFractionDigits:0}), d.bitcoin.usd_24h_change);
-  } catch(e){ setMkt(2,'$84,200',1.2); }
-}
-function setMkt(i,price,chg){
-  const el=document.getElementById('mp'+i);
-  el.textContent=price; el.classList.remove('flash'); void el.offsetWidth; el.classList.add('flash');
-  const ce=document.getElementById('mc'+i);
-  const s=chg>=0?'+':''; ce.textContent=s+chg.toFixed(2)+'%';
-  ce.className='mkt-chg '+(chg>=0?'up':'dn');
-}
-
-// ── GAUGES
-const GS=[
-  {v:12,mn:8, mx:20, col:'#e74c3c', bg:'linear-gradient(90deg,#e67e22,#e74c3c)'},
-  {v:78,mn:60,mx:90, col:'var(--gold)', bg:'linear-gradient(90deg,var(--gold),#b8922b)'},
-  {v:65,mn:50,mx:80, col:'#e74c3c', bg:'linear-gradient(90deg,#e74c3c,#922b21)'},
-  {v:55,mn:40,mx:72, col:'var(--gold)', bg:'linear-gradient(90deg,#27ae60,var(--gold))'},
-  {v:42,mn:30,mx:60, col:'#85c1e9', bg:'linear-gradient(90deg,#2e86c1,#1a5276)'},
-  {v:48,mn:35,mx:65, col:'#2ecc71', bg:'linear-gradient(90deg,#239b56,#27ae60)'},
-];
-function tickGauges(){
-  GS.forEach((g,i)=>{
-    g.v=clamp(g.v+(Math.random()-.5)*2.5, g.mn, g.mx);
-    const v=Math.round(g.v);
-    const el=document.getElementById('gv'+i);
-    if(el){el.textContent=v+'%'; el.classList.remove('flash'); void el.offsetWidth; el.classList.add('flash');}
-    const b=document.getElementById('gf'+i);
-    if(b){b.style.width=v+'%'; b.style.background=g.bg;}
-  });
-}
-
-// ── SCENARIOS
-const SC={s:[18,45,28,9]};
-function tickSc(){
-  SC.s[0]=clamp(SC.s[0]+(Math.random()-.5)*2.5, 12,28);
-  SC.s[1]=clamp(SC.s[1]+(Math.random()-.5)*2.5, 35,58);
-  const rem=100-SC.s[0]-SC.s[1];
-  SC.s[2]=clamp(rem*.76, 15,35); SC.s[3]=clamp(rem-SC.s[2],4,15);
-  [1,2,3,4].forEach((i,j)=>{
-    const v=Math.round(SC.s[j]);
-    document.getElementById('s'+i+'p').textContent=v+'%';
-    document.getElementById('s'+i+'b').style.width=v+'%';
-  });
-}
-
-// ── POWER METERS
-const PM=[
-  {lbl:'القوة الصاروخية', ir:72, il:58},
-  {lbl:'الدفاع الجوي',    ir:45, il:88},
-  {lbl:'الاستخبارات',    ir:55, il:82},
-  {lbl:'الحرب الإلكترونية',ir:50,il:80},
-  {lbl:'القوة البحرية',   ir:60, il:55},
-];
-function renderPM(){
-  document.getElementById('pm-container').innerHTML=PM.map(p=>`
-    <div class="pm">
-      <div>
-        <div class="pm-lbl" style="color:rgba(35,155,86,0.7);text-align:right">إيران ${p.ir}%</div>
-        <div class="pm-bar"><div class="pm-fill-ir" style="width:${p.ir}%"></div></div>
-      </div>
-      <div><div class="pm-cat">${p.lbl}</div></div>
-      <div class="pm-right">
-        <div class="pm-lbl" style="color:rgba(46,134,193,0.7)">إسرائيل ${p.il}%</div>
-        <div class="pm-bar"><div class="pm-fill-il" style="width:${p.il}%"></div></div>
-      </div>
-    </div>
-  `).join('');
-}
-
-// ── EVENTS
-const EVS=[
-  {d:'d-r',t:'منذ ساعتين', actor:'tag-ir', lbl:'🇮🇷 الحرس الثوري', txt:'تحذير: أي ضربة على الأراضي الإيرانية ستواجه رداً "ساحقاً ومدمراً"'},
-  {d:'d-b',t:'منذ 4 ساعات',actor:'tag-us', lbl:'🇺🇸 البنتاغون',   txt:'إعلان تعزيز منظومة THAAD في المنطقة + إرسال قاذفات B-52'},
-  {d:'d-y',t:'منذ 6 ساعات',actor:'tag-il', lbl:'🇮🇱 سلاح الجو',    txt:'ضربات على أهداف إيرانية في سوريا مرتبطة بالحرس الثوري'},
-  {d:'d-r',t:'أمس',         actor:'tag-ir', lbl:'🇾🇪 الحوثيون',     txt:'إطلاق 5 صواريخ نحو إسرائيل — اعتراض 4 منها بالقبة الحديدية'},
-  {d:'d-p',t:'منذ يومين',   actor:'tag-un', lbl:'🇺🇳 مجلس الأمن',   txt:'جلسة طارئة بشأن خطر التصعيد النووي في الشرق الأوسط'},
-  {d:'d-y',t:'منذ 3 أيام',  actor:'tag-il', lbl:'🇮🇱 الموساد',      txt:'اغتيال مسؤول بارز في الحرس الثوري داخل الأراضي الإيرانية'},
-];
-function renderEvents(){
-  document.getElementById('events-feed').innerHTML=EVS.map(e=>`
-    <div class="ev"><div class="ev-dot ${e.d}"></div><div>
-      <div class="ev-time">${e.t}</div>
-      <div class="ev-actor ${e.actor}">${e.lbl}</div>
-      <div class="ev-txt">${e.txt}</div>
-    </div></div>
-  `).join('');
-}
-
-// ── NEWS — NewsAPI حقيقية لحظية
-const NEWS_API_KEY = '9878bdf2ddfd43c29fc9a49ac4b92582';
-const NEWS_QUERIES = ['Iran Israel','Iran nuclear','Hezbollah Houthi','Iran missile strike'];
-const SRC_MAP = {
-  'reuters.com':      {name:'رويترز',   cls:'sr'},
-  'bbc.co.uk':        {name:'BBC',      cls:'sb'},
-  'bbc.com':          {name:'BBC',      cls:'sb'},
-  'aljazeera.com':    {name:'الجزيرة', cls:'si'},
-  'apnews.com':       {name:'AP',       cls:'sa'},
-  'theguardian.com':  {name:'Guardian', cls:'sa'},
-  'cnn.com':          {name:'CNN',      cls:'sb'},
-  'france24.com':     {name:'France24', cls:'si'},
-  'timesofisrael.com':{name:'ToI',      cls:'sb'},
-  'haaretz.com':      {name:'Haaretz',  cls:'sb'},
-  'axios.com':        {name:'Axios',    cls:'sa'},
-  'nbcnews.com':      {name:'NBC',      cls:'sa'},
-};
-
-// Fallback ثابت
-const FNS=[
-  {src:'رويترز',cls:'sr',time:'منذ 10 دقائق',fullDate:'',hot:true, title:'مسؤول إيراني: طهران ستواصل تخصيب اليورانيوم بصرف النظر عن أي ضغوط',url:'#'},
-  {src:'BBC',   cls:'sb',time:'منذ 22 دقيقة',fullDate:'',hot:true, title:'إسرائيل تعلن إحباط هجوم إلكتروني إيراني على منشآت بنية تحتية',url:'#'},
-  {src:'AP',    cls:'sa',time:'منذ 35 دقيقة',fullDate:'',hot:false,title:'واشنطن ترسل حاملة طائرات إضافية إلى شرق المتوسط',url:'#'},
-  {src:'الجزيرة',cls:'si',time:'منذ ساعة',  fullDate:'',hot:true, title:'الحوثيون: استهدفنا سفينة أمريكية في البحر الأحمر',url:'#'},
-  {src:'رويترز',cls:'sr',time:'منذ 2 ساعة',fullDate:'',hot:false, title:'النفط يرتفع 2.3% وسط مخاوف من إغلاق مضيق هرمز',url:'#'},
-  {src:'BBC',   cls:'sb',time:'منذ 3 ساعات',fullDate:'',hot:false, title:'تقرير: إسرائيل تطور قنبلة اختراقية لمنشآت نطنز',url:'#'},
-];
-let lastNews = [...FNS];
-let qIdx = 0;
-
-async function fetchNews(){
-  // دوّر على الاستعلامات لتنويع الأخبار
-  const query = NEWS_QUERIES[qIdx % NEWS_QUERIES.length];
-  qIdx++;
-
-  const apiUrl = `https://newsapi.org/v2/everything?q=${encodeURIComponent(query)}&sortBy=publishedAt&pageSize=10&language=en&apiKey=${NEWS_API_KEY}`;
-  const proxies = [
-    `https://api.allorigins.win/get?url=${encodeURIComponent(apiUrl)}`,
-    `https://corsproxy.io/?${encodeURIComponent(apiUrl)}`,
-  ];
-
-  for(const proxyUrl of proxies){
-    try{
-      const r = await fetch(proxyUrl, {signal: AbortSignal.timeout(9000)});
-      if(!r.ok) continue;
-      const raw = await r.json();
-      const body = raw.contents ? JSON.parse(raw.contents) : raw;
-      if(body.status !== 'ok' || !body.articles?.length) continue;
-
-      const mapped = body.articles
-        .filter(a => a.title && a.title !== '[Removed]' && a.url)
-        .slice(0,8)
-        .map((a,i)=>{
-          const domain = (() => { try{ return new URL(a.url).hostname.replace('www.',''); }catch(e){return '';} })();
-          const s = SRC_MAP[domain] || {name: a.source?.name||'مصدر دولي', cls:'sr'};
-          const pubDate = new Date(a.publishedAt);
-          return {
-            src:  s.name, cls: s.cls,
-            time: timeAgo(pubDate),
-            fullDate: formatFullDate(pubDate),
-            hot:  i < 3,
-            title: a.title,
-            url:  a.url,
-            img:  a.urlToImage || null,
-          };
-        });
-
-      if(mapped.length > 0){
-        lastNews = mapped;
-        renderNews(mapped);
-        setTicker(mapped);
-        showNewsStatus('✅ NewsAPI — بيانات حقيقية', true);
-        return;
-      }
-    }catch(e){ /* جرب proxy التالي */ }
-  }
-
-  // fallback: RSS الجزيرة
-  try{
-    const rss='https://www.aljazeera.net/xml/rss/all.xml';
-    const r=await fetch(`https://api.allorigins.win/get?url=${encodeURIComponent(rss)}`,{signal:AbortSignal.timeout(6000)});
-    if(r.ok){
-      const d=await r.json();
-      const xml=new DOMParser().parseFromString(d.contents,'text/xml');
-      const items=[...xml.querySelectorAll('item')].slice(0,8);
-      if(items.length>0){
-        const mapped=items.map((it,i)=>{
-          const pubDate = new Date(it.querySelector('pubDate')?.textContent||'');
-          return {
-            src:'الجزيرة',cls:'si',
-            time:timeAgo(pubDate),
-            fullDate: formatFullDate(pubDate),
-            hot:i<2, title:it.querySelector('title')?.textContent||'',
-            url:it.querySelector('link')?.textContent||'#', img:null,
-          };
-        }).filter(n=>n.title);
-        if(mapped.length>0){
-          lastNews=mapped; renderNews(mapped); setTicker(mapped);
-          showNewsStatus('📡 الجزيرة RSS', true); return;
-        }
-      }
-    }
-  }catch(e){}
-
-  renderNews(lastNews);
-  setTicker(lastNews);
-  showNewsStatus('⚠️ وضع عدم الاتصال', false);
-}
-
-function showNewsStatus(msg, ok){
-  const el = document.getElementById('news-status');
-  if(el){ el.textContent = msg; el.style.color = ok ? 'var(--gold)' : 'var(--danger)'; }
-}
-
-function renderNews(items){
-  document.getElementById('news-feed').innerHTML =
-    `<div id="news-status" style="font-size:10px;color:var(--muted);margin-bottom:10px;letter-spacing:0.3px">جاري التحديث...</div>` +
-    items.map(n=>`
-      <div class="ni" onclick="${n.url!=='#'?`window.open('${n.url}','_blank')`:'void(0)'}" style="${n.url!=='#'?'cursor:pointer':''}">
-        ${n.img ? `<img src="${n.img}" style="width:100%;height:110px;object-fit:cover;border-radius:6px;margin-bottom:8px;display:block" onerror="this.style.display='none'" loading="lazy">` : ''}
-        <div class="ni-meta">
-          <span class="ni-src ${n.cls}">${n.src}</span>
-          ${n.hot?'<span class="ni-hot">⚡ عاجل</span>':''}
-        </div>
-        <div class="ni-title">${n.title}</div>
-        <div class="ni-datetime">
-          <span class="ni-ago">🕐 ${n.time}</span>
-          ${n.fullDate ? `<span class="ni-fulldate">📅 ${n.fullDate}</span>` : ''}
-        </div>
-      </div>
-    `).join('');
-}
-
-function setTicker(items){
-  document.getElementById('ticker').innerHTML=
-    items.slice(0,6).map(n=>`<span>🔴 ${n.title}</span>`).join('');
-}
-
-// ── UTILS
-function clamp(v,mn,mx){return Math.max(mn,Math.min(mx,v));}
-function formatFullDate(d){
-  if(!d || isNaN(d)) return '';
-  const days   = ['الأحد','الاثنين','الثلاثاء','الأربعاء','الخميس','الجمعة','السبت'];
-  const months = ['يناير','فبراير','مارس','أبريل','مايو','يونيو','يوليو','أغسطس','سبتمبر','أكتوبر','نوفمبر','ديسمبر'];
-  const pad = x => String(x).padStart(2,'0');
-  return `${days[d.getDay()]} ${d.getDate()} ${months[d.getMonth()]} ${d.getFullYear()} — ${pad(d.getHours())}:${pad(d.getMinutes())}`;
-}
-function timeAgo(d){
-  if(isNaN(d)) return 'للتو';
-  const diff=Math.floor((Date.now()-d)/60000);
-  if(diff<1) return 'للتو';
-  if(diff<60) return `منذ ${diff} دقيقة`;
-  if(diff<1440) return `منذ ${Math.floor(diff/60)} ساعة`;
-  return `منذ ${Math.floor(diff/1440)} يوم`;
-}
-
-// ── MASTER REFRESH
-async function masterRefresh(){
-  stamp(); tickMkts(); tickGauges(); tickSc();
-  await Promise.allSettled([fetchBTC(), fetchNews()]);
-}
-
-// ── MEDIA TABS
-function switchTab(tab){
-  ['photos','video','infograph'].forEach(t=>{
-    document.getElementById('tab-'+t).style.display = t===tab ? 'block' : 'none';
-  });
-  document.querySelectorAll('.mtab').forEach((el,i)=>{
-    el.classList.toggle('active', ['photos','video','infograph'][i]===tab);
-  });
-  if(tab==='infograph') renderInfograph();
-}
-
-// ── YOUTUBE CHANNEL SWITCH
-function loadChannel(channelId, btn){
-  document.getElementById('yt-frame').src =
-    `https://www.youtube.com/embed/live_stream?channel=${channelId}&autoplay=1&mute=0`;
-  document.querySelectorAll('.yt-ch').forEach(el=>el.classList.remove('active'));
-  btn.classList.add('active');
-}
-
-// ── WIKIMEDIA PHOTOS (geopolitics, Iran, Israel conflict)
-const WIKI_PHOTOS = [
-  {
-    url:'https://upload.wikimedia.org/wikipedia/commons/thumb/c/ca/Flag_of_Iran.svg/800px-Flag_of_Iran.svg.png',
-    cap:'علم الجمهورية الإسلامية الإيرانية',
-    src:'Wikimedia Commons', badge:'إيران', full:false
-  },
-  {
-    url:'https://upload.wikimedia.org/wikipedia/commons/thumb/d/d4/Flag_of_Israel.svg/800px-Flag_of_Israel.svg.png',
-    cap:'علم دولة إسرائيل',
-    src:'Wikimedia Commons', badge:'إسرائيل', full:false
-  },
-  {
-    url:'https://upload.wikimedia.org/wikipedia/commons/thumb/3/37/Iron_Dome_battery_Ashkelon.jpg/1024px-Iron_Dome_battery_Ashkelon.jpg',
-    cap:'منظومة القبة الحديدية الإسرائيلية للدفاع الجوي في عسقلان',
-    src:'IDF / Wikimedia Commons', badge:'عسكري', full:true
-  },
-  {
-    url:'https://upload.wikimedia.org/wikipedia/commons/thumb/5/58/Natanz_Nuclear_Facility.jpg/800px-Natanz_Nuclear_Facility.jpg',
-    cap:'منشأة نطنز النووية الإيرانية — محور التوتر الدولي',
-    src:'DigitalGlobe / Wikimedia Commons', badge:'نووي', full:false
-  },
-  {
-    url:'https://upload.wikimedia.org/wikipedia/commons/thumb/a/a5/Strait_of_Hormuz_map.png/800px-Strait_of_Hormuz_map.png',
-    cap:'مضيق هرمز — الممر الحيوي لنفط الخليج',
-    src:'CIA / Wikimedia Commons', badge:'استراتيجي', full:false
-  },
-  {
-    url:'https://upload.wikimedia.org/wikipedia/commons/thumb/e/ea/USS_Theodore_Roosevelt_%28CVN-71%29_in_the_Pacific_Ocean.jpg/1024px-USS_Theodore_Roosevelt_%28CVN-71%29_in_the_Pacific_Ocean.jpg',
-    cap:'حاملة الطائرات USS Theodore Roosevelt — القوة البحرية الأمريكية في المنطقة',
-    src:'US Navy / Wikimedia Commons', badge:'أمريكا', full:true
-  },
-  {
-    url:'https://upload.wikimedia.org/wikipedia/commons/thumb/9/9d/F-35I_Adir_IAF.jpg/800px-F-35I_Adir_IAF.jpg',
-    cap:'طائرة F-35I Adir الإسرائيلية — أحدث سلاح جوي في المنطقة',
-    src:'IAF / Wikimedia Commons', badge:'جوي', full:false
-  },
-  {
-    url:'https://upload.wikimedia.org/wikipedia/commons/thumb/3/3b/Shahab-3_ballistic_missile.jpg/800px-Shahab-3_ballistic_missile.jpg',
-    cap:'صاروخ شهاب-3 الباليستي الإيراني — يصل مداه إلى إسرائيل',
-    src:'Wikimedia Commons', badge:'صواريخ', full:false
-  },
-];
-
-function renderPhotos(){
-  let html = '<div class="photo-grid">';
-  WIKI_PHOTOS.forEach(p=>{
-    html += `
-      <div class="photo-item${p.full?' photo-full':''}" onclick="openLightbox('${p.url}','${p.cap}')">
-        <img src="${p.url}" alt="${p.cap}" loading="lazy"
-          onerror="this.parentElement.style.display='none'">
-        <div class="photo-caption">
-          ${p.cap}
-          <div class="photo-src">📷 ${p.src}</div>
-        </div>
-        <div class="photo-badge">${p.badge}</div>
-      </div>`;
-  });
-  html += '</div><div style="font-size:10px;color:var(--muted);margin-top:10px;text-align:center">📷 الصور من Wikimedia Commons — مرخصة للاستخدام العام</div>';
-  document.getElementById('tab-photos').innerHTML = html;
-}
-
-// ── LIGHTBOX
-function openLightbox(src, cap){
-  document.getElementById('lb-img').src = src;
-  document.getElementById('lb-cap').textContent = cap;
-  document.getElementById('lightbox').classList.add('open');
-}
-function closeLightbox(){
-  document.getElementById('lightbox').classList.remove('open');
-}
-document.addEventListener('keydown', e=>{ if(e.key==='Escape') closeLightbox(); });
-
-// ── INFOGRAPHIC DATA
-const IG_DATA = [
-  { icon:'☢️', label:'نسبة التخصيب', sub:'إيران vs الحد المسموح به (3.67%)', ir:60, il:0, irLabel:'إيران 60%', ilLabel:'الحد الأدنى للقنبلة 90%', irColor:'#e74c3c', note:'⚠️ على بُعد خطوة من التسليح' },
-  { icon:'🚀', label:'الصواريخ الباليستية', sub:'التقديرات الاستخباراتية', ir:85, il:40, irLabel:'إيران 3,000+', ilLabel:'إسرائيل سري', note:'إيران تمتلك أكبر ترسانة بالمنطقة' },
-  { icon:'🛡️', label:'منظومات الدفاع الجوي', sub:'نسبة الاعتراض المقدّرة', ir:40, il:90, irLabel:'إيران 40%', ilLabel:'إسرائيل 90%+', note:'القبة الحديدية + Arrow 3 = الأقوى عالمياً' },
-  { icon:'🛢️', label:'احتياطي النفط (مليار برميل)', sub:'القدرة النفطية كسلاح اقتصادي', ir:80, il:5, irLabel:'إيران 209B', ilLabel:'إسرائيل نزر', note:'النفط = أقوى ورقة ضغط إيرانية' },
-  { icon:'🌍', label:'الوجود الإقليمي عبر الوكلاء', sub:'دول التأثير المباشر', ir:88, il:35, irLabel:'إيران: 7+ دول', ilLabel:'إسرائيل: محدود', note:'لبنان، سوريا، العراق، اليمن، غزة...' },
-  { icon:'💵', label:'ميزانية الدفاع (نسبة من GDP)', sub:'الإنفاق العسكري مقارنة بالاقتصاد', ir:55, il:95, irLabel:'إيران: ~2.5%', ilLabel:'إسرائيل: ~5.3%', note:'إسرائيل الأعلى إنفاقاً نسبياً في المنطقة' },
-];
-
-function renderInfograph(){
-  document.getElementById('infograph-content').innerHTML = IG_DATA.map(d=>`
-    <div style="padding:12px 14px;border-bottom:1px solid var(--border)">
-      <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px">
-        <span style="font-size:20px">${d.icon}</span>
-        <div>
-          <div style="font-size:12px;font-weight:700">${d.label}</div>
-          <div style="font-size:10px;color:var(--muted)">${d.sub}</div>
-        </div>
-      </div>
-      <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-bottom:5px">
-        <div>
-          <div style="font-size:9px;color:#27ae60;font-weight:700;margin-bottom:3px">${d.irLabel}</div>
-          <div style="background:rgba(255,255,255,0.05);height:8px;border-radius:4px;overflow:hidden">
-            <div style="height:100%;width:${d.ir}%;background:linear-gradient(90deg,#239b56,#1a7a42);border-radius:4px;transition:width 1.5s"></div>
-          </div>
-        </div>
-        <div>
-          <div style="font-size:9px;color:#2e86c1;font-weight:700;margin-bottom:3px">${d.ilLabel}</div>
-          <div style="background:rgba(255,255,255,0.05);height:8px;border-radius:4px;overflow:hidden">
-            <div style="height:100%;width:${d.il}%;background:linear-gradient(90deg,#2e86c1,#1a5276);border-radius:4px;transition:width 1.5s"></div>
-          </div>
-        </div>
-      </div>
-      <div style="font-size:10px;color:var(--muted);font-style:italic">💡 ${d.note}</div>
-    </div>
-  `).join('');
-}
-
-// ── INIT
-document.addEventListener('DOMContentLoaded', async ()=>{
-  stamp(); renderPM(); renderEvents();
-  renderNews(FNS); setTicker(FNS);
-  renderPhotos();
-  tickGauges(); tickSc();
-  await masterRefresh();
-  setInterval(()=>{ tickMkts(); stamp(); }, 30000);
-  setInterval(()=>{ tickGauges(); tickSc(); }, 90000);
-  setInterval(fetchNews, 120000); // كل دقيقتين — NewsAPI
-  setInterval(fetchBTC, 60000);
-});
-</script>
-</body>
-</html>
+⚡ عاجل
+🔴 جاري تحميل آخر أخبار الصراع...
+🇮🇷
+إيران
+الجمهورية الإسلامية
+محور المقاومة
+🇷🇺 روسيا
+🇨🇳 الصين
+🇾🇪 الحوثيون
+🇱🇧 حزب الله
+VS
+الصراع الكبير • الشرق الأوسط
+
+بث مباشر
+التحالف الغربي
+🇬🇧 بريطانيا
+🇫🇷 فرنسا
+🇩🇪 ألمانيا
+🇯🇴 الأردن
+إسرائيل
+دولة إسرائيل
+🇮🇱
+أمريكا
+القوة العظمى
+🇺🇸
+آخر تحديث: --:--:--  ·  تحديث تلقائي كل 30 ثانية
+⟳ تحديث الآن
+☢️
+12%
+خطر نووي
+
+🚀
+78%
+تبادل صاروخي
+
+🔥
+65%
+خطر التصعيد
+
+🛢️
+55%
+اضطراب الطاقة
+
+🌊
+42%
+مضيق هرمز
+
+💰
+48%
+صدمة اقتصادية
+
+⚔️ موازين القوى العسكرية
+2025
+العنصر
+🇮🇷 إيران
+🇮🇱 إسرائيل
+🇺🇸 أمريكا
+الجيش النظامي
+610K
+169K
+1.3M
+الدبابات
+1,996
+1,370
+5,500
+الطائرات الحربية
+551
+612
+13,247
+الصواريخ الباليستية
+3,000+
+سري
+—
+السفن الحربية
+101
+67
+484
+الرؤوس النووية
+⚠️ قريب
+~90
+5,550
+ميزانية الدفاع
+$10B
+$24B
+$886B
+📊 مقارنة إيران × إسرائيل
+تحليل AI
+
+📈 تأثير الصراع على الأسواق
+● مباشر
+🛢️
+النفط (برنت)
+حساس لمضيق هرمز
+—
+—
+🥇
+الذهب
+ملاذ آمن حربي
+—
+—
+₿
+البيتكوين
+مؤشر ثقة السوق
+—
+—
+📊
+S&P 500
+تأثير غير مباشر
+—
+—
+محور إيران
+🇮🇷 🇾🇪 🇱🇧 🇮🇶
+610K+
+نظاميون
+200K+
+الوكلاء (حزب الله، الحوثيون، الفصائل)
+🚀 3,000+ صاروخ باليستي
+VS
+إسرائيل + أمريكا
+🇮🇱 🇺🇸 🇬🇧
+169K
+IDF إسرائيل
+45K+
+قوات أمريكية بالمنطقة
+✈️ 3 حاملات طائرات أمريكية
+📸 صور الأحداث
+📺 بث مباشر
+📊 إنفوغراف
+
+
+
+
+
+📷 الصور من Wikimedia Commons — مرخصة للاستخدام العام
+📰 آخر أخبار الصراع
+● مباشر
+
+
+
+جاري تحميل الأخبار...
+🕐 سجل الأحداث الأخيرة
+● مباشر
+
+🎙️ تصريحات القادة العالميين
+● مباشر
+
+
+
+جاري تحميل التصريحات...
+🤖 سيناريوهات الـ 30 يوم القادمة
+AI محدّث
+آخر تحليل: --:--
+🟢 تهدئة دبلوماسية
+18%
+
+🟡 استمرار الوضع الراهن
+45%
+
+🟠 ضربات محدودة متبادلة
+28%
+
+🔴 حرب إقليمية شاملة
+9%
+
+تقييم AI:
+إيران تعتمد استراتيجية الضغط عبر الوكلاء دون المواجهة المباشرة مع الولايات المتحدة. البرنامج النووي هو ورقة الضغط الأقوى. الوضع يميل نحو الاستمرار مع ومضات تصعيد محدودة.
+📍 نقاط الاشتعال الرئيسية
+محدّث
+
+مستمر
+☢️ البرنامج النووي
+تخصيب 60% — على بُعد خطوة من القنبلة
+
+مستمر
+🌊 مضيق هرمز
+إيران تتحكم بـ20% من إمدادات النفط العالمي
+
+مستمر
+🇱🇧 حزب الله
+150,000+ صاروخ موجه نحو إسرائيل
+
+مستمر
+🇾🇪 الحوثيون
+هجمات متكررة على الملاحة في البحر الأحمر
+
+مستمر
+🇺🇸 القوة الأمريكية
+3 حاملات طائرات + قواعد متعددة بالمنطقة
+
+متقطع
+🇮🇶 الفصائل العراقية
+هجمات على القواعد الأمريكية في العراق وسوريا
+💥 سجل الضربات المتبادلة
+موثّق
+
+أبريل 2024
+🇮🇷 إيران ← إسرائيل
+أول هجوم مباشر: 300+ صاروخ ومسيّرة
+
+أكتوبر 2024
+🇮🇷 إيران ← إسرائيل
+الموجة الثانية: 200 صاروخ باليستي في ساعة
+
+أكتوبر 2024
+🇮🇱 إسرائيل ← إيران
+ضربات انتقامية استهدفت منشآت عسكرية داخل إيران
+
+2023 - مستمر
+🇾🇪 الحوثيون ← إسرائيل
+مئات الهجمات الصاروخية والمسيّرات
+
+2024
+🇺🇸 أمريكا ← الحوثيون
+عملية Prosperity Guardian: ضربات على اليمن
+تطوير: Ahmed Hussein | 2025 | تحديث تلقائي مفعّل | جميع البيانات لأغراض إعلامية وتحليلية
